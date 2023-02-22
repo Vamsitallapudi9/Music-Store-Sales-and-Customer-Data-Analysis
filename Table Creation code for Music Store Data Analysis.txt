@@ -1,0 +1,107 @@
+CREATE TABLE Employee (
+  employee_id INT PRIMARY KEY,
+  first_name VARCHAR(20),
+  last_name VARCHAR(20),
+  title VARCHAR(30),
+  reports_to INT,
+  birth_date DATE,
+  hire_date DATE,
+  address VARCHAR(70),
+  city VARCHAR(40),
+  state VARCHAR(40),
+  country VARCHAR(40),
+  postal_code VARCHAR(10),
+  phone VARCHAR(24),
+  fax varchar(50),
+  email VARCHAR(60)
+);
+
+CREATE TABLE Customer (
+  customer_id INT PRIMARY KEY,
+  first_name VARCHAR(40),
+  last_name VARCHAR(40),
+  company VARCHAR(80),
+  address VARCHAR(70),
+  city VARCHAR(40),
+  state VARCHAR(40),
+  country VARCHAR(40),
+  postal_code VARCHAR(10),
+  phone VARCHAR(24),
+  fax VARCHAR(24),
+  email VARCHAR(60),
+  support_reo_id INT,
+  FOREIGN KEY (support_reo_id) REFERENCES Employee (employee_id) ON DELETE CASCADE ON UPDATE NO ACTION
+);
+
+CREATE TABLE Invoice (
+  invoice_id INT PRIMARY KEY,
+  customer_id INT,
+  invoice_date DATE,
+  billing_address VARCHAR(70),
+  billing_city VARCHAR(40),
+  billing_state VARCHAR(40),
+  billing_country VARCHAR(40),
+  billing_postal_code VARCHAR(10),
+  total DECIMAL(10,2),
+  FOREIGN KEY (customer_id) REFERENCES Customer (customer_id) ON DELETE CASCADE ON UPDATE NO ACTION
+);
+
+CREATE TABLE Invoice_line (
+  invoice_line_id INT PRIMARY KEY,
+  invoice_id INT,
+  track_id INT,
+  unit_price DECIMAL(10,2),
+  quantity INT,
+  FOREIGN KEY (invoice_id) REFERENCES Invoice (invoice_id) ON DELETE CASCADE ON UPDATE NO ACTION,
+  FOREIGN KEY (track_id) REFERENCES Track (track_id) ON DELETE CASCADE ON UPDATE NO ACTION
+);
+
+CREATE TABLE Track (
+  track_id INT PRIMARY KEY,
+  name VARCHAR(200),
+  album_id INT,
+  media_type_id INT,
+  genre_id INT,
+  composer VARCHAR(220),
+  milliseconds INT,
+  bytes INT,
+  unit_price DECIMAL(10,2),
+  FOREIGN KEY (album_id) REFERENCES Album (album_id) ON DELETE CASCADE ON UPDATE NO ACTION,
+  FOREIGN KEY (media_type_id) REFERENCES Media_type (media_type_id) ON DELETE CASCADE ON UPDATE NO ACTION,
+  FOREIGN KEY (genre_id) REFERENCES Genre (genre_id) ON DELETE CASCADE ON UPDATE NO ACTION
+);
+
+CREATE TABLE Playlist (
+  playlist_id INT PRIMARY KEY,
+  name VARCHAR(120)
+);
+
+CREATE TABLE Playlist_track (
+  playlist_id INT,
+  track_id INT,
+  PRIMARY KEY (playlist_id, track_id),
+  FOREIGN KEY (playlist_id) REFERENCES Playlist (playlist_id) ON DELETE CASCADE ON UPDATE NO ACTION,
+  FOREIGN KEY (track_id) REFERENCES Track (track_id) ON DELETE CASCADE ON UPDATE NO ACTION
+);
+
+CREATE TABLE Media_type (
+  media_type_id INT PRIMARY KEY,
+  name VARCHAR(120)
+);
+
+CREATE TABLE Genre (
+  genre_id INT PRIMARY KEY,
+  name VARCHAR(120)
+);
+
+CREATE TABLE Album (
+  album_id INT PRIMARY KEY,
+  title VARCHAR(160),
+  artist_id INT,
+  FOREIGN KEY (artist_id) REFERENCES Artist (artist_id) ON DELETE CASCADE ON UPDATE NO ACTION
+);
+
+CREATE TABLE Artist (
+  artist_id INT PRIMARY KEY,
+  name VARCHAR(120)
+);
